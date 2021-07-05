@@ -2,6 +2,7 @@ const express = require("express"); //importar la libreria
 const cors = require("cors");
 
 const authRouter = require("../routes/auth");
+const db = require("../db/connection");
 
 class Server {
   constructor() {
@@ -14,11 +15,21 @@ class Server {
       mensajes: "/api/mensajes",
     };
 
+    //DB
+    this.dbConnection();
     //Middlewares
     this.middlewares();
-
     //Rutas de mi aplicacion
     this.routes();
+  }
+
+  async dbConnection() {
+    try {
+      await db.authenticate();
+      console.log("Database Online");
+    } catch (error) {
+      throw new Error(error);
+    }
   }
 
   middlewares() {
